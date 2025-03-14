@@ -1,0 +1,33 @@
+# Fait en Skript 2.9.5. (for all version of plugin SKRIPT)
+# Aucun addons requis.
+# Système de login avec un mot de passe pré-défini pour les opérateurs du serveur.
+# Remplace SK.SKANTARYUM par ta permission.
+
+on join:
+  wait 1 tick
+  if player has permission "sk.skantaryum":
+    Moderation_freeze(player) # fige le joueur sur place # [X] fonction non fournie
+    set {login::%uuid of player%} to false
+    while {login::%uuid of player%} = false:
+      wait 4 seconds
+      send "&cVous devez vous authentifier avec /login <mot de passe> !" to player
+
+on join:
+  wait 30 seconds
+  if {login::%uuid of player%} is false:
+    kick player due to "&cVous n'avez pas entré votre mot de passe."
+
+command /login <text>:
+  permission: sk.skantaryum
+  trigger:
+    if {login::%uuid of player%} is true:
+      send "&aVous êtes déjà connecté !" to player
+      stop trigger
+    if arg-1 is not set:
+      send "&cUsage: /login <mot de passe>" to player
+      stop trigger
+    if arg-1 is not "<TON MOT DE PASSE - à donner a tout le staff>":
+      send "&cMot de passe incorrect !" to player
+      stop trigger
+    set {login::%uuid of player%} to true
+    send "&aAuthentification réussie !" to player
